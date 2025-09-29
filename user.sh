@@ -1,13 +1,12 @@
 #!/bin/bash
+
+TIMESTAMP=$(date +%F-%H-%M-%S)
+LOGFILE="/tmp/$0-$TIMESTAMP.log"
 ID=$(id -u)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-MONGODB_HOST="mongodb.opsora.space"
-TIMESTAMP=$(date +%F-%H-%M-%S)
-LOGFILE="/tmp/$0-$TIMESTAMP.log"
-
 echo "script started execution at $TIMESTAMP" &>>$LOGFILE
 VALIDATE() {
     if [ $1 -ne 0 ]
@@ -27,15 +26,12 @@ else
 
 fi
 
-dnf module disable nodejs -y &>>$LOGFILE
+dnf module disable nodejs -y &>>$LOGFILE        
 VALIDATE $? "Disabling Nodejs module"
-
 dnf module enable nodejs:18 -y &>>$LOGFILE
 VALIDATE $? "Enabling Nodejs 18 module"
-
 dnf install nodejs -y &>>$LOGFILE
 VALIDATE $? "Installing Nodejs"
-
 id roboshop &>>$LOGFILE
 if [ $? -ne 0 ]
 then
@@ -44,37 +40,33 @@ then
     VALIDATE $? "Adding roboshop user"
 else
     echo -e "$Y roboshop user already exists $Yskipping... $N"
-fi
+fi 
 
 mkdir -p /app &>>$LOGFILE
 VALIDATE $? "Creating /app directory"
 
-curl -L -o /tmp/catalogue.zip "https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip" &>>$LOGFILE
-VALIDATE $? "Downloading catalogue code"    
-
+curl -L -o /tmp/user.zip "https://roboshop-artifacts.s3.amazonaws.com/user.zip" &>>$LOGFILE
+VALIDATE $? "Downloading user code"
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
-
-unzip -o /tmp/catalogue.zip &>>$LOGFILE
-VALIDATE $? "Extracting catalogue code"
-
+unzip -o /tmp/user.zip &>>$LOGFILE
+VALIDATE $? "Extracting user code"
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
-
 npm install &>>$LOGFILE
 VALIDATE $? "Installing nodejs dependencies"
 
-cp /home/centos/roboshop-shell/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGFILE
-VALIDATE $? "Copying catalogue systemd file"
+cp /home/centos/roboshop-shell/user.service /etc/systemd/system/user.service &>>$LOGFILE
+VALIDATE $? "Copying user systemd service file"
 
 systemctl daemon-reload &>>$LOGFILE
 VALIDATE $? "Reloading systemd"
 
-systemctl enable catalogue &>>$LOGFILE
-VALIDATE $? "Enabling catalogue service"
+systemctl enable user &>>$LOGFILE
+VALIDATE $? "Enabling user service" 
 
-systemctl start catalogue &>>$LOGFILE
-VALIDATE $? "Starting catalogue service"    
+systemctl start user &>>$LOGFILE
+VALIDATE $? "Starting user service" 
 
 cp /home/centos/roboshop-shell/mongodb.repo /etc/yum.repos.d/mongodb.repo &>>$LOGFILE
 VALIDATE $? "Copying mongodb repo file"
@@ -82,8 +74,5 @@ VALIDATE $? "Copying mongodb repo file"
 dnf install mongodb-org-shell -y &>>$LOGFILE
 VALIDATE $? "Installing mongodb client"
 
-mongo --host $MONGODB_HOST </app/schema/catalogue.js
+mongo --host mongodb.opsora.space </app/schema/user.js
 
-VALIDATE $? "Loading catalogue schema"
-systemctl status catalogue &>>$LOGFILE
-VALIDATE $? "Checking catalogue status" 
