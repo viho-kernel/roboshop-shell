@@ -64,5 +64,7 @@ systemctl start shipping &>>$LOGFILE
 VALIDATE $? "Starting shipping service"
 dnf install mysql -y &>>$LOGFILE
 VALIDATE $? "Installing mysql client"
-
-
+mysql -h mysql.opsora.space -uroot -pRoboShop@1 < /app/schema/shipping.sql &>>$LOGFILE
+VALIDATE $? "Creating shipping database schema"
+systemctl restart shipping
+VALIDATE $? "Restarting shipping service"
