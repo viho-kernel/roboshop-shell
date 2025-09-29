@@ -9,14 +9,14 @@ N="\e[0m"
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
-VALIDATE() [
+VALIDATE() {
     if [ $1 -ne 0 ]
     then   
         echo -e "$R Error:: $2 is failed.$N"
     else
         echo -e "$G Success:: $2 is successful.$N"
-    fi  
-]
+    fi
+}
 
 if [ $ID -ne 0 ]
 then    
