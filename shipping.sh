@@ -10,7 +10,7 @@ TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
 VALIDATE() [
-    if [$1 -ne 0]
+    if [ $1 -ne 0 ]
     then   
         echo -e "$R Error:: $2 is failed.$N"
     else
@@ -18,7 +18,7 @@ VALIDATE() [
     fi  
 ]
 
-if [ID -ne 0 ] 
+if [ $ID -ne 0 ]
 then    
   echo -e "$R Error:: This script must be run as root or with sudo.$N"
   exit 1
