@@ -29,3 +29,17 @@ fi
 
 cp mongodb.repo /etc/yum.repos.d/mongodb.repo &>>$LOGFILE
 VALIDATE $? "Copying Mongodb repo file"
+
+dnf install mongodb-org -y &>>$LOGFILE
+VALIDATE $? "Installing Mongodb"
+
+systemctl enable mongod &>>$LOGFILE
+VALIDATE $? "Enabling Mongodb"
+
+systemctl start mongod &>>$LOGFILE
+VALIDATE $? "Starting Mongodb"
+
+systemctl status mongod &>>$LOGFILE
+VALIDATE $? "Checking Mongodb status"   
+
+
