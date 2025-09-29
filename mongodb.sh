@@ -42,4 +42,10 @@ VALIDATE $? "Starting Mongodb"
 systemctl status mongod &>>$LOGFILE
 VALIDATE $? "Checking Mongodb status"   
 
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>>$LOGFILE
+VALIDATE $? "Updating Mongodb listen address"
+systemctl restart mongod &>>$LOGFILE
+VALIDATE $? "Restarting Mongodb"
+
+
 
