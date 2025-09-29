@@ -26,3 +26,6 @@ else
     echo -e "$G You are running this script as root.$N"
 
 fi
+
+cp mongodb.repo /etc/yum.repos.d/mongodb.repo &>>$LOGFILE
+VALIDATE $? "Copying Mongodb repo file"
