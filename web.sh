@@ -47,9 +47,6 @@ VALIDATE $? "Changing directory to Nginx html"
 unzip /tmp/web.zip &>>$LOGFILE
 VALIDATE $? "Extracting web content"
 
-vim /etc/nginx/default.d/roboshop.conf  &>>$LOGFILE
-VALIDATE $? "Creating roboshop nginx config file"
-
 cp /home/centos/roboshop-shell/roboshop.conf /etc/nginx/default.d/roboshop.conf &>>$LOGFILE
 VALIDATE $? "Copying roboshop nginx config file"
 
