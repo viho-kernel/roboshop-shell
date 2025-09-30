@@ -8,10 +8,11 @@ N="\e[0m"
 
 TIMESTAMP=$(date +%F-%H-%M-%S)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
+exec &>>$LOGFILE
 
 echo "script started execution at $TIMESTAMP" &>>$LOGFILE
 VALIDATE() {
-    if [ $1 - ne 0 ]
+    if [ $1 -ne 0 ]
     then
         echo -e "$R Error:: $2 is failed.$N"
     else
@@ -44,7 +45,8 @@ systemctl enable redis &>>$LOGFILE
 VALIDATE $? "Enabling Redis"
 
 systemctl start redis &>>$LOGFILE
-VALIDATE $? "Starting Redis"    
+VALIDATE $? "Starting Redis"   
+
 systemctl status redis &>>$LOGFILE
 VALIDATE $? "Checking Redis status"
 
