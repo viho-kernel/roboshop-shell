@@ -74,5 +74,7 @@ VALIDATE $? "Copying mongodb repo file"
 dnf install mongodb-org-shell -y &>>$LOGFILE
 VALIDATE $? "Installing mongodb client"
 
-mongo --host mongodb.opsora.space </app/schema/user.js
+mongo --host mongodb.opsora.space </app/schema/user.js &>>$LOGFILE
+VALIDATE $? "Loading schema to mongodb"
+
 
