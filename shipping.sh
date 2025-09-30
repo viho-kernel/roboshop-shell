@@ -42,29 +42,42 @@ else
 fi     
 mkdir -p /app &>>$LOGFILE
 VALIDATE $? "Creating /app directory"
+
 curl -L -o /tmp/shipping.zip "https://roboshop-artifacts.s3.amazonaws.com/shipping.zip" &>>$LOGFILE
 VALIDATE $? "Downloading shipping code"
+
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
+
 unzip -o /tmp/shipping.zip &>>$LOGFILE
 VALIDATE $? "Extracting shipping code"
+
 cd /app &>>$LOGFILE
 VALIDATE $? "Changing directory to /app"
+
 mvn clean package &>>$LOGFILE
 VALIDATE $? "Building shipping code"
+
 mv target/shipping-1.0.jar shipping.jar &>>$LOGFILE
 VALIDATE $? "Renaming shipping jar file"
+
 cp /home/centos/roboshop-shell/shipping.service /etc/systemd/system/shipping.service &>>$LOGFILE
 VALIDATE $? "Copying shipping systemd service file"
+
 systemctl daemon-reload &>>$LOGFILE
 VALIDATE $? "Reloading systemd daemon"
+
 systemctl enable shipping &>>$LOGFILE
 VALIDATE $? "Enabling shipping service"
+
 systemctl start shipping &>>$LOGFILE
 VALIDATE $? "Starting shipping service"
+
 dnf install mysql -y &>>$LOGFILE
 VALIDATE $? "Installing mysql client"
+
 mysql -h mysql.opsora.space -uroot -pRoboShop@1 < /app/schema/shipping.sql &>>$LOGFILE
 VALIDATE $? "Creating shipping database schema"
+
 systemctl restart shipping
 VALIDATE $? "Restarting shipping service"
