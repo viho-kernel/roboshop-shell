@@ -12,6 +12,8 @@ do
     else
         INSTANCE_TYPE="t2.micro"
     fi
-    aws ec2 run-instances --image-id $AMI --instance-type $INSTANCE_TYPE --security-group-ids $SG_ID --tag-specifications "ResourceType=instance, Tags=[{Key=stack,Value=$i}]"
+    IP_address=$(aws ec2 run-instances --image-id $AMI --instance-type $INSTANCE_TYPE --security-group-ids $SG_ID --tag-specifications "ResourceType=instance, Tags=[{Key=stack,Value=$i}]" --query 'Instances[0].PrivateIpAddress' --output text)
+    echo "IP address of $i is: $IP_address \n"
+    
 
 done
